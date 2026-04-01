@@ -1,0 +1,693 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>csvmem: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">github.com/aleksadvaisly/badge-on-gist/csvmem/csvmem.go (98.2%)</option>
+				
+				<option value="file1">github.com/aleksadvaisly/badge-on-gist/csvmemdemo/average.go (66.7%)</option>
+				
+				<option value="file2">github.com/aleksadvaisly/badge-on-gist/csvmemdemo/columns.go (81.8%)</option>
+				
+				<option value="file3">github.com/aleksadvaisly/badge-on-gist/csvmemdemo/count.go (83.3%)</option>
+				
+				<option value="file4">github.com/aleksadvaisly/badge-on-gist/csvmemdemo/dataset.go (80.0%)</option>
+				
+				<option value="file5">github.com/aleksadvaisly/badge-on-gist/csvmemdemo/distinct.go (90.0%)</option>
+				
+				<option value="file6">github.com/aleksadvaisly/badge-on-gist/csvmemdemo/filter.go (85.7%)</option>
+				
+				<option value="file7">github.com/aleksadvaisly/badge-on-gist/csvmemdemo/group.go (77.8%)</option>
+				
+				<option value="file8">github.com/aleksadvaisly/badge-on-gist/csvmemdemo/headers.go (77.8%)</option>
+				
+				<option value="file9">github.com/aleksadvaisly/badge-on-gist/csvmemdemo/helpers.go (93.8%)</option>
+				
+				<option value="file10">github.com/aleksadvaisly/badge-on-gist/csvmemdemo/lookup.go (66.7%)</option>
+				
+				<option value="file11">github.com/aleksadvaisly/badge-on-gist/csvmemdemo/minmax.go (87.5%)</option>
+				
+				<option value="file12">github.com/aleksadvaisly/badge-on-gist/csvmemdemo/parse.go (71.4%)</option>
+				
+				<option value="file13">github.com/aleksadvaisly/badge-on-gist/csvmemdemo/project.go (88.9%)</option>
+				
+				<option value="file14">github.com/aleksadvaisly/badge-on-gist/csvmemdemo/rename.go (85.7%)</option>
+				
+				<option value="file15">github.com/aleksadvaisly/badge-on-gist/csvmemdemo/render.go (90.9%)</option>
+				
+				<option value="file16">github.com/aleksadvaisly/badge-on-gist/csvmemdemo/rows.go (90.0%)</option>
+				
+				<option value="file17">github.com/aleksadvaisly/badge-on-gist/csvmemdemo/sort.go (80.0%)</option>
+				
+				<option value="file18">github.com/aleksadvaisly/badge-on-gist/csvmemdemo/sum.go (77.8%)</option>
+				
+				<option value="file19">github.com/aleksadvaisly/badge-on-gist/csvmemdemo/trim.go (100.0%)</option>
+				
+				<option value="file20">github.com/aleksadvaisly/badge-on-gist/csvmemdemo/validate.go (63.6%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package csvmem
+
+import (
+        "encoding/csv"
+        "fmt"
+        "strconv"
+        "strings"
+)
+
+type Record map[string]string
+
+func Parse(data string) ([]Record, error) <span class="cov8" title="1">{
+        reader := csv.NewReader(strings.NewReader(data))
+        reader.FieldsPerRecord = -1
+
+        rows, err := reader.ReadAll()
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, fmt.Errorf("parse csv: %w", err)
+        }</span>
+        <span class="cov8" title="1">if len(rows) == 0 </span><span class="cov8" title="1">{
+                return nil, fmt.Errorf("csv is empty")
+        }</span>
+
+        <span class="cov8" title="1">headers := rows[0]
+        if len(headers) == 0 </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("missing headers")
+        }</span>
+
+        <span class="cov8" title="1">seen := map[string]struct{}{}
+        for _, h := range headers </span><span class="cov8" title="1">{
+                if h == "" </span><span class="cov8" title="1">{
+                        return nil, fmt.Errorf("header cannot be empty")
+                }</span>
+                <span class="cov8" title="1">if _, ok := seen[h]; ok </span><span class="cov8" title="1">{
+                        return nil, fmt.Errorf("duplicate header: %s", h)
+                }</span>
+                <span class="cov8" title="1">seen[h] = struct{}{}</span>
+        }
+
+        <span class="cov8" title="1">records := make([]Record, 0, len(rows)-1)
+        for i, row := range rows[1:] </span><span class="cov8" title="1">{
+                if len(row) != len(headers) </span><span class="cov8" title="1">{
+                        return nil, fmt.Errorf("row %d has %d columns, expected %d", i+2, len(row), len(headers))
+                }</span>
+
+                <span class="cov8" title="1">record := make(Record, len(headers))
+                for idx, header := range headers </span><span class="cov8" title="1">{
+                        record[header] = row[idx]
+                }</span>
+                <span class="cov8" title="1">records = append(records, record)</span>
+        }
+
+        <span class="cov8" title="1">return records, nil</span>
+}
+
+func SumInt(records []Record, column string) (int, error) <span class="cov8" title="1">{
+        if err := ensureColumn(records, column); err != nil </span><span class="cov8" title="1">{
+                return 0, err
+        }</span>
+
+        <span class="cov8" title="1">total := 0
+        for i, record := range records </span><span class="cov8" title="1">{
+                value, err := strconv.Atoi(record[column])
+                if err != nil </span><span class="cov8" title="1">{
+                        return 0, fmt.Errorf("row %d column %q is not an int: %w", i+1, column, err)
+                }</span>
+                <span class="cov8" title="1">total += value</span>
+        }
+
+        <span class="cov8" title="1">return total, nil</span>
+}
+
+func AverageInt(records []Record, column string) (float64, error) <span class="cov8" title="1">{
+        if len(records) == 0 </span><span class="cov8" title="1">{
+                return 0, fmt.Errorf("cannot average empty dataset")
+        }</span>
+
+        <span class="cov8" title="1">total, err := SumInt(records, column)
+        if err != nil </span><span class="cov8" title="1">{
+                return 0, err
+        }</span>
+
+        <span class="cov8" title="1">return float64(total) / float64(len(records)), nil</span>
+}
+
+func Filter(records []Record, column, value string) ([]Record, error) <span class="cov8" title="1">{
+        if err := ensureColumn(records, column); err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">filtered := make([]Record, 0, len(records))
+        for _, record := range records </span><span class="cov8" title="1">{
+                if record[column] == value </span><span class="cov8" title="1">{
+                        filtered = append(filtered, record)
+                }</span>
+        }
+
+        <span class="cov8" title="1">return filtered, nil</span>
+}
+
+func ensureColumn(records []Record, column string) error <span class="cov8" title="1">{
+        if column == "" </span><span class="cov8" title="1">{
+                return fmt.Errorf("column name cannot be empty")
+        }</span>
+        <span class="cov8" title="1">if len(records) == 0 </span><span class="cov8" title="1">{
+                return fmt.Errorf("no records available")
+        }</span>
+        <span class="cov8" title="1">if _, ok := records[0][column]; !ok </span><span class="cov8" title="1">{
+                return fmt.Errorf("column %q does not exist", column)
+        }</span>
+
+        <span class="cov8" title="1">return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package csvmemdemo
+
+import "fmt"
+
+func AverageInt(records []Record, column string) (float64, error) <span class="cov8" title="1">{
+        if len(records) == 0 </span><span class="cov0" title="0">{
+                return 0, fmt.Errorf("cannot average empty dataset")
+        }</span>
+        <span class="cov8" title="1">total, err := SumInt(records, column)
+        if err != nil </span><span class="cov0" title="0">{
+                return 0, err
+        }</span>
+        <span class="cov8" title="1">return float64(total) / float64(len(records)), nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package csvmemdemo
+
+import "sort"
+
+func Columns(records []Record) []string <span class="cov8" title="1">{
+        if len(records) == 0 </span><span class="cov0" title="0">{
+                return nil
+        }</span>
+
+        <span class="cov8" title="1">keys := make([]string, 0, len(records[0]))
+        for key := range records[0] </span><span class="cov8" title="1">{
+                keys = append(keys, key)
+        }</span>
+        <span class="cov8" title="1">sort.Strings(keys)
+        return keys</span>
+}
+
+func HasColumn(records []Record, column string) bool <span class="cov8" title="1">{
+        if len(records) == 0 </span><span class="cov0" title="0">{
+                return false
+        }</span>
+        <span class="cov8" title="1">_, ok := records[0][column]
+        return ok</span>
+}
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package csvmemdemo
+
+func CountBy(records []Record, column string) (map[string]int, error) <span class="cov8" title="1">{
+        if err := EnsureColumn(records, column); err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">counts := make(map[string]int, len(records))
+        for _, record := range records </span><span class="cov8" title="1">{
+                counts[record[column]]++
+        }</span>
+        <span class="cov8" title="1">return counts, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file4" style="display: none">package csvmemdemo
+
+func DemoCSV() string <span class="cov8" title="1">{
+        return "order_id,region,team,amount,units,status\n" +
+                "A-100,north,alpha,120,3,paid\n" +
+                "A-101,north,beta,90,2,pending\n" +
+                "A-102,south,alpha,150,4,paid\n" +
+                "A-103,west,gamma,60,1,cancelled\n" +
+                "A-104,east,beta,200,5,paid\n"
+}</span>
+
+func MustParseDemo() []Record <span class="cov8" title="1">{
+        records, err := Parse(DemoCSV())
+        if err != nil </span><span class="cov0" title="0">{
+                panic(err)</span>
+        }
+        <span class="cov8" title="1">return records</span>
+}
+</pre>
+		
+		<pre class="file" id="file5" style="display: none">package csvmemdemo
+
+import "sort"
+
+func Distinct(records []Record, column string) ([]string, error) <span class="cov8" title="1">{
+        if err := EnsureColumn(records, column); err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">seen := make(map[string]struct{}, len(records))
+        for _, record := range records </span><span class="cov8" title="1">{
+                seen[record[column]] = struct{}{}
+        }</span>
+
+        <span class="cov8" title="1">values := make([]string, 0, len(seen))
+        for value := range seen </span><span class="cov8" title="1">{
+                values = append(values, value)
+        }</span>
+        <span class="cov8" title="1">sort.Strings(values)
+        return values, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file6" style="display: none">package csvmemdemo
+
+func FilterEquals(records []Record, column, value string) ([]Record, error) <span class="cov8" title="1">{
+        if err := EnsureColumn(records, column); err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">filtered := make([]Record, 0, len(records))
+        for _, record := range records </span><span class="cov8" title="1">{
+                if record[column] == value </span><span class="cov8" title="1">{
+                        filtered = append(filtered, cloneRecord(record))
+                }</span>
+        }
+        <span class="cov8" title="1">return filtered, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file7" style="display: none">package csvmemdemo
+
+func GroupSumInt(records []Record, keyColumn, valueColumn string) (map[string]int, error) <span class="cov8" title="1">{
+        if err := EnsureColumns(records, keyColumn, valueColumn); err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">values, err := intsFromColumn(records, valueColumn)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">grouped := make(map[string]int, len(records))
+        for index, record := range records </span><span class="cov8" title="1">{
+                grouped[record[keyColumn]] += values[index]
+        }</span>
+        <span class="cov8" title="1">return grouped, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file8" style="display: none">package csvmemdemo
+
+import "fmt"
+
+func parseHeaders(line string) ([]string, error) <span class="cov8" title="1">{
+        headers := splitFields(line)
+        seen := make(map[string]struct{}, len(headers))
+        for _, header := range headers </span><span class="cov8" title="1">{
+                if header == "" </span><span class="cov0" title="0">{
+                        return nil, fmt.Errorf("header cannot be empty")
+                }</span>
+                <span class="cov8" title="1">if _, ok := seen[header]; ok </span><span class="cov0" title="0">{
+                        return nil, fmt.Errorf("duplicate header: %s", header)
+                }</span>
+                <span class="cov8" title="1">seen[header] = struct{}{}</span>
+        }
+        <span class="cov8" title="1">return headers, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file9" style="display: none">package csvmemdemo
+
+import "strconv"
+
+func cloneRecord(record Record) Record <span class="cov8" title="1">{
+        out := make(Record, len(record))
+        for key, value := range record </span><span class="cov8" title="1">{
+                out[key] = value
+        }</span>
+        <span class="cov8" title="1">return out</span>
+}
+
+func cloneRecords(records []Record) []Record <span class="cov8" title="1">{
+        out := make([]Record, 0, len(records))
+        for _, record := range records </span><span class="cov8" title="1">{
+                out = append(out, cloneRecord(record))
+        }</span>
+        <span class="cov8" title="1">return out</span>
+}
+
+func intsFromColumn(records []Record, column string) ([]int, error) <span class="cov8" title="1">{
+        if err := EnsureColumn(records, column); err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">values := make([]int, 0, len(records))
+        for _, record := range records </span><span class="cov8" title="1">{
+                values = append(values, mustInt(record[column]))
+        }</span>
+        <span class="cov8" title="1">return values, nil</span>
+}
+
+func mustInt(raw string) int <span class="cov8" title="1">{
+        value, _ := strconv.Atoi(raw)
+        return value
+}</span>
+</pre>
+		
+		<pre class="file" id="file10" style="display: none">package csvmemdemo
+
+func FindFirst(records []Record, column, value string) (Record, bool, error) <span class="cov8" title="1">{
+        filtered, err := FilterEquals(records, column, value)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, false, err
+        }</span>
+        <span class="cov8" title="1">if len(filtered) == 0 </span><span class="cov0" title="0">{
+                return nil, false, nil
+        }</span>
+        <span class="cov8" title="1">return filtered[0], true, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file11" style="display: none">package csvmemdemo
+
+func MinInt(records []Record, column string) (int, error) <span class="cov8" title="1">{
+        values, err := intsFromColumn(records, column)
+        if err != nil </span><span class="cov0" title="0">{
+                return 0, err
+        }</span>
+        <span class="cov8" title="1">min := values[0]
+        for _, value := range values[1:] </span><span class="cov8" title="1">{
+                if value &lt; min </span><span class="cov8" title="1">{
+                        min = value
+                }</span>
+        }
+        <span class="cov8" title="1">return min, nil</span>
+}
+
+func MaxInt(records []Record, column string) (int, error) <span class="cov8" title="1">{
+        values, err := intsFromColumn(records, column)
+        if err != nil </span><span class="cov0" title="0">{
+                return 0, err
+        }</span>
+        <span class="cov8" title="1">max := values[0]
+        for _, value := range values[1:] </span><span class="cov8" title="1">{
+                if value &gt; max </span><span class="cov8" title="1">{
+                        max = value
+                }</span>
+        }
+        <span class="cov8" title="1">return max, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file12" style="display: none">package csvmemdemo
+
+import "fmt"
+
+func Parse(data string) ([]Record, error) <span class="cov8" title="1">{
+        lines := splitLines(data)
+        if len(lines) == 0 </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("csv is empty")
+        }</span>
+
+        <span class="cov8" title="1">headers, err := parseHeaders(lines[0])
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">return parseRows(headers, lines[1:])</span>
+}
+</pre>
+		
+		<pre class="file" id="file13" style="display: none">package csvmemdemo
+
+func Project(records []Record, columns []string) ([]Record, error) <span class="cov8" title="1">{
+        if err := EnsureColumns(records, columns...); err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">projected := make([]Record, 0, len(records))
+        for _, record := range records </span><span class="cov8" title="1">{
+                item := make(Record, len(columns))
+                for _, column := range columns </span><span class="cov8" title="1">{
+                        item[column] = record[column]
+                }</span>
+                <span class="cov8" title="1">projected = append(projected, item)</span>
+        }
+        <span class="cov8" title="1">return projected, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file14" style="display: none">package csvmemdemo
+
+func RenameColumn(records []Record, from, to string) ([]Record, error) <span class="cov8" title="1">{
+        if err := EnsureColumn(records, from); err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">renamed := cloneRecords(records)
+        for _, record := range renamed </span><span class="cov8" title="1">{
+                record[to] = record[from]
+                delete(record, from)
+        }</span>
+        <span class="cov8" title="1">return renamed, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file15" style="display: none">package csvmemdemo
+
+import "strings"
+
+func RenderTable(records []Record, columns []string) (string, error) <span class="cov8" title="1">{
+        projected, err := Project(records, columns)
+        if err != nil </span><span class="cov0" title="0">{
+                return "", err
+        }</span>
+
+        <span class="cov8" title="1">lines := make([]string, 0, len(projected)+1)
+        lines = append(lines, strings.Join(columns, " | "))
+        for _, record := range projected </span><span class="cov8" title="1">{
+                row := make([]string, 0, len(columns))
+                for _, column := range columns </span><span class="cov8" title="1">{
+                        row = append(row, record[column])
+                }</span>
+                <span class="cov8" title="1">lines = append(lines, strings.Join(row, " | "))</span>
+        }
+        <span class="cov8" title="1">return strings.Join(lines, "\n"), nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file16" style="display: none">package csvmemdemo
+
+import "fmt"
+
+func parseRows(headers []string, lines []string) ([]Record, error) <span class="cov8" title="1">{
+        records := make([]Record, 0, len(lines))
+        for index, line := range lines </span><span class="cov8" title="1">{
+                fields := splitFields(line)
+                if len(fields) != len(headers) </span><span class="cov0" title="0">{
+                        return nil, fmt.Errorf("row %d has %d columns, expected %d", index+2, len(fields), len(headers))
+                }</span>
+
+                <span class="cov8" title="1">record := make(Record, len(headers))
+                for i, header := range headers </span><span class="cov8" title="1">{
+                        record[header] = fields[i]
+                }</span>
+                <span class="cov8" title="1">records = append(records, record)</span>
+        }
+        <span class="cov8" title="1">return records, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file17" style="display: none">package csvmemdemo
+
+import "sort"
+
+func SortByInt(records []Record, column string, desc bool) ([]Record, error) <span class="cov8" title="1">{
+        if err := EnsureColumn(records, column); err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">sorted := cloneRecords(records)
+        sort.Slice(sorted, func(i, j int) bool </span><span class="cov8" title="1">{
+                left := mustInt(sorted[i][column])
+                right := mustInt(sorted[j][column])
+                if desc </span><span class="cov8" title="1">{
+                        return left &gt; right
+                }</span>
+                <span class="cov0" title="0">return left &lt; right</span>
+        })
+        <span class="cov8" title="1">return sorted, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file18" style="display: none">package csvmemdemo
+
+import (
+        "fmt"
+        "strconv"
+)
+
+func SumInt(records []Record, column string) (int, error) <span class="cov8" title="1">{
+        if err := EnsureColumn(records, column); err != nil </span><span class="cov0" title="0">{
+                return 0, err
+        }</span>
+
+        <span class="cov8" title="1">total := 0
+        for index, record := range records </span><span class="cov8" title="1">{
+                value, err := strconv.Atoi(record[column])
+                if err != nil </span><span class="cov0" title="0">{
+                        return 0, fmt.Errorf("row %d column %q is not an int", index+1, column)
+                }</span>
+                <span class="cov8" title="1">total += value</span>
+        }
+        <span class="cov8" title="1">return total, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file19" style="display: none">package csvmemdemo
+
+import "strings"
+
+func splitLines(data string) []string <span class="cov8" title="1">{
+        lines := strings.Split(strings.ReplaceAll(data, "\r\n", "\n"), "\n")
+        out := make([]string, 0, len(lines))
+        for _, line := range lines </span><span class="cov8" title="1">{
+                if strings.TrimSpace(line) == "" </span><span class="cov8" title="1">{
+                        continue</span>
+                }
+                <span class="cov8" title="1">out = append(out, line)</span>
+        }
+        <span class="cov8" title="1">return out</span>
+}
+
+func splitFields(line string) []string <span class="cov8" title="1">{
+        parts := strings.Split(line, ",")
+        for i := range parts </span><span class="cov8" title="1">{
+                parts[i] = strings.TrimSpace(parts[i])
+        }</span>
+        <span class="cov8" title="1">return parts</span>
+}
+</pre>
+		
+		<pre class="file" id="file20" style="display: none">package csvmemdemo
+
+import "fmt"
+
+func EnsureColumn(records []Record, column string) error <span class="cov8" title="1">{
+        if column == "" </span><span class="cov0" title="0">{
+                return fmt.Errorf("column name cannot be empty")
+        }</span>
+        <span class="cov8" title="1">if len(records) == 0 </span><span class="cov0" title="0">{
+                return fmt.Errorf("no records available")
+        }</span>
+        <span class="cov8" title="1">if !HasColumn(records, column) </span><span class="cov0" title="0">{
+                return fmt.Errorf("column %q does not exist", column)
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+}
+
+func EnsureColumns(records []Record, columns ...string) error <span class="cov8" title="1">{
+        for _, column := range columns </span><span class="cov8" title="1">{
+                if err := EnsureColumn(records, column); err != nil </span><span class="cov0" title="0">{
+                        return err
+                }</span>
+        }
+        <span class="cov8" title="1">return nil</span>
+}
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>
